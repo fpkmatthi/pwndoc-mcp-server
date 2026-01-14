@@ -95,20 +95,20 @@ std::string Server::handle_list_tools() {
     return json({{"tools", tools}}).dump();
 }
 
-std::string Server::handle_call_tool(const std::string& name, const json& arguments) {
+json Server::handle_call_tool(const std::string& name, const json& arguments) {
     try {
         json result = execute_tool(*client_, name, arguments);
         return json({
             {"content", json::array({
                 {{"type", "text"}, {"text", result.dump(2)}}
             })}
-        }).dump();
+        });
     } catch (const std::exception& e) {
         return json({
             {"content", json::array({
                 {{"type", "text"}, {"text", json({{"error", e.what()}}).dump()}}
             })},
             {"isError", true}
-        }).dump();
+        });
     }
 }

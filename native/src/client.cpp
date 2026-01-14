@@ -140,8 +140,8 @@ struct curl_slist* PwnDocClient::build_headers(bool include_auth) {
     headers = curl_slist_append(headers, "Content-Type: application/json");
 
     if (include_auth && !token_.empty()) {
-        std::string auth_header = "Authorization: JWT " + token_;
-        headers = curl_slist_append(headers, auth_header.c_str());
+        std::string cookie_header = "Cookie: token=JWT " + token_;
+        headers = curl_slist_append(headers, cookie_header.c_str());
     }
 
     return headers;
@@ -219,7 +219,7 @@ bool PwnDocClient::authenticate() {
         {"password", *config_.password}
     };
 
-    std::string url = build_url("/users/login");
+    std::string url = build_url("/users/token");
     std::string response_data;
 
     curl_easy_reset(curl_);
