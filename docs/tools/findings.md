@@ -83,6 +83,47 @@ Create a new finding in an audit.
 | `category` | string | No | Category |
 | `scope` | string | No | Affected scope/asset |
 | `references` | array | No | Reference URLs |
+| `customFields` | array | No | Custom fields values (see below) |
+
+### Custom Fields Parameter
+
+The `customFields` parameter allows you to set values for custom fields defined in PwnDoc. Each item in the array must have:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `customField` | string | The custom field ID (get from `list_custom_fields`) |
+| `text` | string or array | Value for the field. String for `input`/`select`/`text` types, array for `select-multiple`/`checkbox` types |
+
+**Example with custom fields:**
+
+```json
+{
+  "audit_id": "507f1f77bcf86cd799439011",
+  "title": "SQL Injection in Login Form",
+  "customFields": [
+    {
+      "customField": "65b135e5cc7f41163c9d4510",
+      "text": "CWE-89"
+    },
+    {
+      "customField": "61b76937cec3ca00128fe075",
+      "text": "Critical"
+    },
+    {
+      "customField": "61b768eacec3ca00128fe073",
+      "text": ["C", "I", "D"]
+    }
+  ]
+}
+```
+
+**Workflow to use custom fields:**
+
+1. Call `list_custom_fields` to get available fields with their IDs, types, and options
+2. Filter fields by `display: "vulnerability"` or `display: "finding"` for finding-related fields
+3. For `select` type fields, use one of the values from the `options` array
+4. For `select-multiple` or `checkbox` type fields, use an array of values from the `options` array
+5. Include the custom fields in your `create_finding` or `update_finding` call
 
 ### Examples
 
@@ -114,6 +155,29 @@ Same as `create_finding`, plus:
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `finding_id` | string | Yes | The finding ID to update |
+
+### Updating Custom Fields
+
+You can update custom fields in the same way as when creating a finding. The `customFields` array will replace the existing custom fields.
+
+**Example - Update CWE and Impact Level:**
+
+```json
+{
+  "audit_id": "507f1f77bcf86cd799439011",
+  "finding_id": "507f1f77bcf86cd799439041",
+  "customFields": [
+    {
+      "customField": "65b135e5cc7f41163c9d4510",
+      "text": "CWE-79"
+    },
+    {
+      "customField": "61b76937cec3ca00128fe075",
+      "text": "Major"
+    }
+  ]
+}
+```
 
 ### Examples
 
