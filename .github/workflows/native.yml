@@ -58,7 +58,9 @@ jobs:
       - name: Install dependencies (macOS)
         if: runner.os == 'macOS'
         run: |
-          brew install cmake curl nlohmann-json
+          brew list cmake &>/dev/null || brew install cmake
+          brew list curl &>/dev/null || brew install curl
+          brew list nlohmann-json &>/dev/null || brew install nlohmann-json
       
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
