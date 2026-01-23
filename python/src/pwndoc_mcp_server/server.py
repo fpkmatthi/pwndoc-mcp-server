@@ -348,6 +348,23 @@ class PwnDocMCPServer:
                         "items": {"type": "string"},
                         "description": "References",
                     },
+                    "customFields": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "customField": {
+                                    "type": "string",
+                                    "description": "Custom field ID (_id from list_custom_fields)",
+                                },
+                                "text": {
+                                    "description": "Value for the custom field. String for input/select/text fields, array of strings for select-multiple/checkbox fields",
+                                },
+                            },
+                            "required": ["customField", "text"],
+                        },
+                        "description": "Custom fields values. Each item must have 'customField' (the field ID) and 'text' (the value). Use list_custom_fields to get available fields and their IDs.",
+                    },
                 },
                 "required": ["audit_id", "title"],
             },
@@ -373,6 +390,23 @@ class PwnDocMCPServer:
                     "poc": {"type": "string"},
                     "scope": {"type": "string"},
                     "references": {"type": "array", "items": {"type": "string"}},
+                    "customFields": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "customField": {
+                                    "type": "string",
+                                    "description": "Custom field ID (_id from list_custom_fields)",
+                                },
+                                "text": {
+                                    "description": "Value for the custom field. String for input/select/text fields, array of strings for select-multiple/checkbox fields",
+                                },
+                            },
+                            "required": ["customField", "text"],
+                        },
+                        "description": "Custom fields values. Each item must have 'customField' (the field ID) and 'text' (the value). Use list_custom_fields to get available fields and their IDs.",
+                    },
                 },
                 "required": ["audit_id", "finding_id"],
             },
@@ -1374,9 +1408,15 @@ class PwnDocMCPServer:
         return self.client.get_finding(audit_id, finding_id)
 
     def _handle_create_finding(self, audit_id: str, **kwargs) -> Dict:
+        # Parse customFields if it's a string (can happen with some MCP clients)
+        if "customFields" in kwargs and isinstance(kwargs["customFields"], str):
+            kwargs["customFields"] = json.loads(kwargs["customFields"])
         return self.client.create_finding(audit_id, **kwargs)
 
     def _handle_update_finding(self, audit_id: str, finding_id: str, **kwargs) -> Dict:
+        # Parse customFields if it's a string (can happen with some MCP clients)
+        if "customFields" in kwargs and isinstance(kwargs["customFields"], str):
+            kwargs["customFields"] = json.loads(kwargs["customFields"])
         return self.client.update_finding(audit_id, finding_id, **kwargs)
 
     def _handle_delete_finding(self, audit_id: str, finding_id: str) -> Dict:
