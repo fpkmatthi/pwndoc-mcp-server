@@ -36,7 +36,7 @@ private:
     /**
      * Handle tools/call request
      */
-    std::string handle_call_tool(const std::string& name, const nlohmann::json& arguments);
+    nlohmann::json handle_call_tool(const std::string& name, const nlohmann::json& arguments);
     
     /**
      * Read a line from stdin

@@ -1132,10 +1132,10 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
     // AUDIT TOOLS
     // =========================================================================
     if (name == "list_audits") {
-        return client.get("/api/audits");
+        return client.get("/audits");
     }
     if (name == "get_audit") {
-        return client.get("/api/audits/" + args["audit_id"].get<std::string>());
+        return client.get("/audits/" + args["audit_id"].get<std::string>());
     }
     if (name == "create_audit") {
         json data = {
@@ -1143,57 +1143,57 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
             {"language", args["language"]},
             {"auditType", args["audit_type"]}
         };
-        return client.post("/api/audits", data);
+        return client.post("/audits", data);
     }
     if (name == "update_audit_general") {
         std::string audit_id = args["audit_id"].get<std::string>();
         json data = args;
         data.erase("audit_id");
-        return client.put("/api/audits/" + audit_id + "/general", data);
+        return client.put("/audits/" + audit_id + "/general", data);
     }
     if (name == "delete_audit") {
-        client.del("/api/audits/" + args["audit_id"].get<std::string>());
+        client.del("/audits/" + args["audit_id"].get<std::string>());
         return {{"success", true}, {"message", "Audit deleted"}};
     }
     if (name == "generate_audit_report") {
-        return client.get("/api/audits/" + args["audit_id"].get<std::string>() + "/generate");
+        return client.get("/audits/" + args["audit_id"].get<std::string>() + "/generate");
     }
     if (name == "get_audit_general") {
-        return client.get("/api/audits/" + args["audit_id"].get<std::string>() + "/general");
+        return client.get("/audits/" + args["audit_id"].get<std::string>() + "/general");
     }
     if (name == "get_audit_network") {
-        return client.get("/api/audits/" + args["audit_id"].get<std::string>() + "/network");
+        return client.get("/audits/" + args["audit_id"].get<std::string>() + "/network");
     }
     if (name == "update_audit_network") {
-        return client.put("/api/audits/" + args["audit_id"].get<std::string>() + "/network", args["network_data"]);
+        return client.put("/audits/" + args["audit_id"].get<std::string>() + "/network", args["network_data"]);
     }
     if (name == "toggle_audit_approval") {
-        return client.put("/api/audits/" + args["audit_id"].get<std::string>() + "/toggleApproval", json::object());
+        return client.put("/audits/" + args["audit_id"].get<std::string>() + "/toggleApproval", json::object());
     }
     if (name == "update_review_status") {
-        return client.put("/api/audits/" + args["audit_id"].get<std::string>() + "/updateReadyForReview", {{"state", args["state"]}});
+        return client.put("/audits/" + args["audit_id"].get<std::string>() + "/updateReadyForReview", {{"state", args["state"]}});
     }
     if (name == "get_audit_sections") {
-        return client.get("/api/audits/" + args["audit_id"].get<std::string>() + "/sections");
+        return client.get("/audits/" + args["audit_id"].get<std::string>() + "/sections");
     }
     if (name == "update_audit_sections") {
-        return client.put("/api/audits/" + args["audit_id"].get<std::string>() + "/sections", args["sections"]);
+        return client.put("/audits/" + args["audit_id"].get<std::string>() + "/sections", args["sections"]);
     }
 
     // =========================================================================
     // FINDING TOOLS
     // =========================================================================
     if (name == "get_audit_findings") {
-        return client.get("/api/audits/" + args["audit_id"].get<std::string>() + "/findings");
+        return client.get("/audits/" + args["audit_id"].get<std::string>() + "/findings");
     }
     if (name == "get_finding") {
-        return client.get("/api/audits/" + args["audit_id"].get<std::string>() + "/findings/" + args["finding_id"].get<std::string>());
+        return client.get("/audits/" + args["audit_id"].get<std::string>() + "/findings/" + args["finding_id"].get<std::string>());
     }
     if (name == "create_finding") {
         std::string audit_id = args["audit_id"].get<std::string>();
         json data = args;
         data.erase("audit_id");
-        return client.post("/api/audits/" + audit_id + "/findings", data);
+        return client.post("/audits/" + audit_id + "/findings", data);
     }
     if (name == "update_finding") {
         std::string audit_id = args["audit_id"].get<std::string>();
@@ -1201,10 +1201,10 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
         json data = args;
         data.erase("audit_id");
         data.erase("finding_id");
-        return client.put("/api/audits/" + audit_id + "/findings/" + finding_id, data);
+        return client.put("/audits/" + audit_id + "/findings/" + finding_id, data);
     }
     if (name == "delete_finding") {
-        client.del("/api/audits/" + args["audit_id"].get<std::string>() + "/findings/" + args["finding_id"].get<std::string>());
+        client.del("/audits/" + args["audit_id"].get<std::string>() + "/findings/" + args["finding_id"].get<std::string>());
         return {{"success", true}, {"message", "Finding deleted"}};
     }
     if (name == "search_findings") {
@@ -1218,45 +1218,45 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
         return {{"error", "get_all_findings_with_context not yet implemented in C++ - use Python version"}};
     }
     if (name == "sort_findings") {
-        return client.put("/api/audits/" + args["audit_id"].get<std::string>() + "/sortFindings", {{"findings", args["finding_order"]}});
+        return client.put("/audits/" + args["audit_id"].get<std::string>() + "/sortFindings", {{"findings", args["finding_order"]}});
     }
     if (name == "move_finding") {
-        return client.post("/api/audits/" + args["audit_id"].get<std::string>() + "/findings/" + args["finding_id"].get<std::string>() + "/move/" + args["destination_audit_id"].get<std::string>(), json::object());
+        return client.post("/audits/" + args["audit_id"].get<std::string>() + "/findings/" + args["finding_id"].get<std::string>() + "/move/" + args["destination_audit_id"].get<std::string>(), json::object());
     }
 
     // =========================================================================
     // CLIENT & COMPANY TOOLS
     // =========================================================================
     if (name == "list_clients") {
-        return client.get("/api/clients");
+        return client.get("/clients");
     }
     if (name == "create_client") {
-        return client.post("/api/clients", args);
+        return client.post("/clients", args);
     }
     if (name == "update_client") {
         std::string client_id = args["client_id"].get<std::string>();
         json data = args;
         data.erase("client_id");
-        return client.put("/api/clients/" + client_id, data);
+        return client.put("/clients/" + client_id, data);
     }
     if (name == "delete_client") {
-        client.del("/api/clients/" + args["client_id"].get<std::string>());
+        client.del("/clients/" + args["client_id"].get<std::string>());
         return {{"success", true}, {"message", "Client deleted"}};
     }
     if (name == "list_companies") {
-        return client.get("/api/companies");
+        return client.get("/companies");
     }
     if (name == "create_company") {
-        return client.post("/api/companies", args);
+        return client.post("/companies", args);
     }
     if (name == "update_company") {
         std::string company_id = args["company_id"].get<std::string>();
         json data = args;
         data.erase("company_id");
-        return client.put("/api/companies/" + company_id, data);
+        return client.put("/companies/" + company_id, data);
     }
     if (name == "delete_company") {
-        client.del("/api/companies/" + args["company_id"].get<std::string>());
+        client.del("/companies/" + args["company_id"].get<std::string>());
         return {{"success", true}, {"message", "Company deleted"}};
     }
 
@@ -1264,83 +1264,83 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
     // VULNERABILITY TEMPLATE TOOLS
     // =========================================================================
     if (name == "list_vulnerabilities") {
-        return client.get("/api/vulnerabilities");
+        return client.get("/vulnerabilities");
     }
     if (name == "get_vulnerabilities_by_locale") {
         std::string locale = args.value("locale", "en");
-        return client.get("/api/vulnerabilities/" + locale);
+        return client.get("/vulnerabilities/" + locale);
     }
     if (name == "create_vulnerability") {
-        return client.post("/api/vulnerabilities", args);
+        return client.post("/vulnerabilities", args);
     }
     if (name == "update_vulnerability") {
         std::string vuln_id = args["vuln_id"].get<std::string>();
         json data = args;
         data.erase("vuln_id");
-        return client.put("/api/vulnerabilities/" + vuln_id, data);
+        return client.put("/vulnerabilities/" + vuln_id, data);
     }
     if (name == "delete_vulnerability") {
-        client.del("/api/vulnerabilities/" + args["vuln_id"].get<std::string>());
+        client.del("/vulnerabilities/" + args["vuln_id"].get<std::string>());
         return {{"success", true}, {"message", "Vulnerability deleted"}};
     }
     if (name == "bulk_delete_vulnerabilities") {
-        return client.del("/api/vulnerabilities", {{"vulnIds", args["vuln_ids"]}});
+        return client.del("/vulnerabilities", {{"vulnIds", args["vuln_ids"]}});
     }
     if (name == "export_vulnerabilities") {
-        return client.get("/api/vulnerabilities/export");
+        return client.get("/vulnerabilities/export");
     }
     if (name == "create_vulnerability_from_finding") {
-        return client.post("/api/vulnerabilities/from-finding", args);
+        return client.post("/vulnerabilities/from-finding", args);
     }
     if (name == "get_vulnerability_updates") {
-        return client.get("/api/vulnerabilities/updates");
+        return client.get("/vulnerabilities/updates");
     }
     if (name == "merge_vulnerability") {
-        return client.post("/api/vulnerabilities/" + args["vuln_id"].get<std::string>() + "/merge/" + args["update_id"].get<std::string>(), json::object());
+        return client.post("/vulnerabilities/" + args["vuln_id"].get<std::string>() + "/merge/" + args["update_id"].get<std::string>(), json::object());
     }
 
     // =========================================================================
     // USER TOOLS
     // =========================================================================
     if (name == "list_users") {
-        return client.get("/api/users");
+        return client.get("/users");
     }
     if (name == "get_current_user") {
-        return client.get("/api/users/me");
+        return client.get("/users/me");
     }
     if (name == "get_user") {
-        return client.get("/api/users/" + args["username"].get<std::string>());
+        return client.get("/users/" + args["username"].get<std::string>());
     }
     if (name == "create_user") {
-        return client.post("/api/users", args);
+        return client.post("/users", args);
     }
     if (name == "update_user") {
         std::string user_id = args["user_id"].get<std::string>();
         json data = args;
         data.erase("user_id");
-        return client.put("/api/users/" + user_id, data);
+        return client.put("/users/" + user_id, data);
     }
     if (name == "update_current_user") {
-        return client.put("/api/users/me", args);
+        return client.put("/users/me", args);
     }
     if (name == "list_reviewers") {
-        return client.get("/api/users/reviewers");
+        return client.get("/users/reviewers");
     }
     if (name == "get_totp_status") {
-        return client.get("/api/users/totp");
+        return client.get("/users/totp");
     }
     if (name == "setup_totp") {
-        return client.post("/api/users/totp", json::object());
+        return client.post("/users/totp", json::object());
     }
     if (name == "disable_totp") {
-        return client.del("/api/users/totp", {{"token", args["token"]}});
+        return client.del("/users/totp", {{"token", args["token"]}});
     }
 
     // =========================================================================
     // SETTINGS & TEMPLATE TOOLS
     // =========================================================================
     if (name == "list_templates") {
-        return client.get("/api/templates");
+        return client.get("/templates");
     }
     if (name == "create_template") {
         json data = {
@@ -1348,7 +1348,7 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
             {"ext", args["ext"]},
             {"file", args["file_content"]}
         };
-        return client.post("/api/templates", data);
+        return client.post("/templates", data);
     }
     if (name == "update_template") {
         std::string template_id = args["template_id"].get<std::string>();
@@ -1358,48 +1358,48 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
             data["file"] = data["file_content"];
             data.erase("file_content");
         }
-        return client.put("/api/templates/" + template_id, data);
+        return client.put("/templates/" + template_id, data);
     }
     if (name == "delete_template") {
-        client.del("/api/templates/" + args["template_id"].get<std::string>());
+        client.del("/templates/" + args["template_id"].get<std::string>());
         return {{"success", true}, {"message", "Template deleted"}};
     }
     if (name == "download_template") {
-        return client.get("/api/templates/download/" + args["template_id"].get<std::string>());
+        return client.get("/templates/download/" + args["template_id"].get<std::string>());
     }
     if (name == "get_settings") {
-        return client.get("/api/settings");
+        return client.get("/settings");
     }
     if (name == "get_public_settings") {
-        return client.get("/api/settings/public");
+        return client.get("/settings/public");
     }
     if (name == "update_settings") {
-        return client.put("/api/settings", args["settings"]);
+        return client.put("/settings", args["settings"]);
     }
     if (name == "export_settings") {
-        return client.get("/api/settings/export");
+        return client.get("/settings/export");
     }
     if (name == "import_settings") {
-        return client.post("/api/settings/import", args["settings"]);
+        return client.post("/settings/import", args["settings"]);
     }
 
     // =========================================================================
     // LANGUAGE TOOLS
     // =========================================================================
     if (name == "list_languages") {
-        return client.get("/api/data/languages");
+        return client.get("/data/languages");
     }
     if (name == "create_language") {
-        return client.post("/api/data/languages", args);
+        return client.post("/data/languages", args);
     }
     if (name == "update_language") {
         std::string language_id = args["language_id"].get<std::string>();
         json data = args;
         data.erase("language_id");
-        return client.put("/api/data/languages/" + language_id, data);
+        return client.put("/data/languages/" + language_id, data);
     }
     if (name == "delete_language") {
-        client.del("/api/data/languages/" + args["language_id"].get<std::string>());
+        client.del("/data/languages/" + args["language_id"].get<std::string>());
         return {{"success", true}, {"message", "Language deleted"}};
     }
 
@@ -1407,19 +1407,19 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
     // AUDIT TYPE TOOLS
     // =========================================================================
     if (name == "list_audit_types") {
-        return client.get("/api/data/audit-types");
+        return client.get("/data/audit-types");
     }
     if (name == "create_audit_type") {
-        return client.post("/api/data/audit-types", args);
+        return client.post("/data/audit-types", args);
     }
     if (name == "update_audit_type") {
         std::string audit_type_id = args["audit_type_id"].get<std::string>();
         json data = args;
         data.erase("audit_type_id");
-        return client.put("/api/data/audit-types/" + audit_type_id, data);
+        return client.put("/data/audit-types/" + audit_type_id, data);
     }
     if (name == "delete_audit_type") {
-        client.del("/api/data/audit-types/" + args["audit_type_id"].get<std::string>());
+        client.del("/data/audit-types/" + args["audit_type_id"].get<std::string>());
         return {{"success", true}, {"message", "Audit type deleted"}};
     }
 
@@ -1427,19 +1427,19 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
     // VULNERABILITY TYPE TOOLS
     // =========================================================================
     if (name == "list_vulnerability_types") {
-        return client.get("/api/data/vulnerability-types");
+        return client.get("/data/vulnerability-types");
     }
     if (name == "create_vulnerability_type") {
-        return client.post("/api/data/vulnerability-types", args);
+        return client.post("/data/vulnerability-types", args);
     }
     if (name == "update_vulnerability_type") {
         std::string vuln_type_id = args["vuln_type_id"].get<std::string>();
         json data = args;
         data.erase("vuln_type_id");
-        return client.put("/api/data/vulnerability-types/" + vuln_type_id, data);
+        return client.put("/data/vulnerability-types/" + vuln_type_id, data);
     }
     if (name == "delete_vulnerability_type") {
-        client.del("/api/data/vulnerability-types/" + args["vuln_type_id"].get<std::string>());
+        client.del("/data/vulnerability-types/" + args["vuln_type_id"].get<std::string>());
         return {{"success", true}, {"message", "Vulnerability type deleted"}};
     }
 
@@ -1447,19 +1447,19 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
     // VULNERABILITY CATEGORY TOOLS
     // =========================================================================
     if (name == "list_vulnerability_categories") {
-        return client.get("/api/data/vulnerability-categories");
+        return client.get("/data/vulnerability-categories");
     }
     if (name == "create_vulnerability_category") {
-        return client.post("/api/data/vulnerability-categories", args);
+        return client.post("/data/vulnerability-categories", args);
     }
     if (name == "update_vulnerability_category") {
         std::string category_id = args["category_id"].get<std::string>();
         json data = args;
         data.erase("category_id");
-        return client.put("/api/data/vulnerability-categories/" + category_id, data);
+        return client.put("/data/vulnerability-categories/" + category_id, data);
     }
     if (name == "delete_vulnerability_category") {
-        client.del("/api/data/vulnerability-categories/" + args["category_id"].get<std::string>());
+        client.del("/data/vulnerability-categories/" + args["category_id"].get<std::string>());
         return {{"success", true}, {"message", "Vulnerability category deleted"}};
     }
 
@@ -1467,19 +1467,19 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
     // SECTION TOOLS
     // =========================================================================
     if (name == "list_sections") {
-        return client.get("/api/data/sections");
+        return client.get("/data/sections");
     }
     if (name == "create_section") {
-        return client.post("/api/data/sections", args);
+        return client.post("/data/sections", args);
     }
     if (name == "update_section") {
         std::string section_id = args["section_id"].get<std::string>();
         json data = args;
         data.erase("section_id");
-        return client.put("/api/data/sections/" + section_id, data);
+        return client.put("/data/sections/" + section_id, data);
     }
     if (name == "delete_section") {
-        client.del("/api/data/sections/" + args["section_id"].get<std::string>());
+        client.del("/data/sections/" + args["section_id"].get<std::string>());
         return {{"success", true}, {"message", "Section deleted"}};
     }
 
@@ -1487,19 +1487,19 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
     // CUSTOM FIELD TOOLS
     // =========================================================================
     if (name == "list_custom_fields") {
-        return client.get("/api/data/custom-fields");
+        return client.get("/data/custom-fields");
     }
     if (name == "create_custom_field") {
-        return client.post("/api/data/custom-fields", args);
+        return client.post("/data/custom-fields", args);
     }
     if (name == "update_custom_field") {
         std::string field_id = args["field_id"].get<std::string>();
         json data = args;
         data.erase("field_id");
-        return client.put("/api/data/custom-fields/" + field_id, data);
+        return client.put("/data/custom-fields/" + field_id, data);
     }
     if (name == "delete_custom_field") {
-        client.del("/api/data/custom-fields/" + args["field_id"].get<std::string>());
+        client.del("/data/custom-fields/" + args["field_id"].get<std::string>());
         return {{"success", true}, {"message", "Custom field deleted"}};
     }
 
@@ -1507,17 +1507,17 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
     // ROLE TOOLS
     // =========================================================================
     if (name == "list_roles") {
-        return client.get("/api/data/roles");
+        return client.get("/data/roles");
     }
 
     // =========================================================================
     // IMAGE TOOLS
     // =========================================================================
     if (name == "get_image") {
-        return client.get("/api/images/" + args["image_id"].get<std::string>());
+        return client.get("/images/" + args["image_id"].get<std::string>());
     }
     if (name == "download_image") {
-        return client.get("/api/images/download/" + args["image_id"].get<std::string>());
+        return client.get("/images/download/" + args["image_id"].get<std::string>());
     }
     if (name == "upload_image") {
         json data = {
@@ -1525,10 +1525,10 @@ json execute_tool(PwnDocClient& client, const std::string& name, const json& arg
             {"name", args["name"]},
             {"value", args["value"]}
         };
-        return client.post("/api/images", data);
+        return client.post("/images", data);
     }
     if (name == "delete_image") {
-        client.del("/api/images/" + args["image_id"].get<std::string>());
+        client.del("/images/" + args["image_id"].get<std::string>());
         return {{"success", true}, {"message", "Image deleted"}};
     }
 
