@@ -10,7 +10,8 @@ WORKDIR /app
 # Install dependencies
 COPY pyproject.toml README.md ./
 COPY src/ ./src/
-RUN pip install --no-cache-dir .
+# RUN pip install --no-cache-dir .
+RUN pip install --no-cache-dir ".[sse]"
 
 # Create non-root user
 RUN useradd -m -u 1000 pwndoc && chown -R pwndoc:pwndoc /app
